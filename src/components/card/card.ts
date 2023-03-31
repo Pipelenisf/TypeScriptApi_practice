@@ -18,9 +18,12 @@ class Card extends HTMLElement{
         return; 
         
             {const dCharactersAtt = dCharacters.map(({imageUrl, name, tvShows}) => `
-                <div style='background-image: url(${imageUrl})'></div>
-                <p>${name}</p>
-                <p>${tvShows}</p>
+                <link rel="stylesheet" href="../src/components/card/card.css">
+                <section>
+                    <div class="image" style='background-image: url(${imageUrl})'></div>
+                    <h1>${name}</h1>
+                    <div class="tv-shows-tag"><p>${tvShows}</p></div>
+                </section>
             `
             ); 
             this.shadowRoot.innerHTML = `
