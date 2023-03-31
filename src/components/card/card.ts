@@ -1,43 +1,32 @@
-export enum appCard {
-    "thumbnail" = "thumbnail",
-    "character" = "character",
-    "description" = "description",
-}
+import { getApiCharacters } from '../../api'
+import { appCard } from './interface';
 
 class Card extends HTMLElement{
-
-    thumbnail?: string
-    character?: string
-    description?: string
-
-    static get observedAttributes(){
-        const cardAtt: Record<appCard, null> = {
-            thumbnail: null,
-            character: null,
-            description: null
-        }
-        return  Object.keys(cardAtt)
-    }
 
     constructor(){
         super();
         this.attachShadow({mode: "open"})
     }
 
-    attributeChangedCallback(propName: appCard, _:string, newValue: string){
-        this[propName] = newValue;
-        this.render()
+    async connectedCallback(){
+        const dCharacters = await getApiCharacters();
+        this.render(dCharacters);
     }
 
-    render(){
-        if(this.shadowRoot)
-        this.shadowRoot.innerHTML = `
-        <section class="card">
-            <div class="character-thumbnail" style="background-image: url(${this.thumbnail || "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Picture_icon_BLACK.svg/1156px-Picture_icon_BLACK.svg.png"});"></div>
-            <h3>${this.character || "Character"}</h3>
-            <p>${this.description || "No content"}</p>
-        </section>
-        `
+    render(dCharacters: Array<appCard>){
+        if(!this.shadowRoot)
+        return; 
+        
+            {const dCharactersAtt = dCharacters.map(({imageUrl, name, tvShows}) => `
+                <div style='background-image: url(${imageUrl})'></div>
+                <p>${name}</p>
+                <p>${tvShows}</p>
+            `
+            ); 
+            this.shadowRoot.innerHTML = `
+                ${dCharactersAtt.join()}
+            `   
+        }
     }
 }
 

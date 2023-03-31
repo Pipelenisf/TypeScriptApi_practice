@@ -1,10 +1,24 @@
-import * as components from './components/exports'
-import Card, {appCard} from './components/card/card'
+import "./components/exports";
 
-class AppHeader extends HTMLElement{
-    cardAttributes: Card[] = [];
-    
-    static get observedAttributes(){
-        return
+class AppContainer extends HTMLElement{
+
+    constructor(){
+        super();
+        this.attachShadow({mode: "open"})
     }
+
+    connectedCallback(){
+        this.render()
+    }
+
+    render(){
+        if(this.shadowRoot)
+        this.shadowRoot.innerHTML = `
+        
+        <app-card></app-card>
+        `
+    }
+
 }
+
+customElements.define("app-container",AppContainer)
